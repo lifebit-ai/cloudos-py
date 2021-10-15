@@ -1,0 +1,10 @@
+name: cloudos
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - python>=3.8
+    - pip
+    - requests
+    - click
+    - pandas
