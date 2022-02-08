@@ -208,7 +208,7 @@ class Cohort(object):
 
         data = {'name': self.cohort_name,
                 'description': self.cohort_desc,
-                'columns': self.columns,
+                'columns': self.__get_column_json(),
                 'type': 'advanced',
                 'numberOfParticipants': new_count}
 
