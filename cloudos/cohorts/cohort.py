@@ -262,6 +262,9 @@ class Cohort(object):
         r_body = {"criteria": {"pagination": {"pageNumber": page_number, "pageSize": page_size},
                                "cohortId": self.cohort_id},
                   "columns": columns}
+        if self.query:
+            r_body['query'] = self.query.to_api_dict()
+
         r_json = self.__fetch_table(r_body, iter_all)
 
         col_names = {"_id": "_id", "i": "i"}
