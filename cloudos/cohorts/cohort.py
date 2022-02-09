@@ -123,7 +123,7 @@ class Cohort(object):
         self.cohort_name = r_json['name']
         self.cohort_desc = r_json.get('description')
         self.num_participants = r_json['numberOfParticipants']
-        self.columns = r_json['columns']
+        self.columns = r_json.get('columns', [])
         self.query_type = r_json['type']
 
         query_dict = r_json.get('query')
