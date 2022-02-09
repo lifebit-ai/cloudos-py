@@ -267,23 +267,25 @@ class Cohort(object):
 
         r_json = self.__fetch_table(r_body, iter_all)
 
-        col_names = {"_id": "_id", "i": "i"}
-        col_types = {"_id": "object", "i": "object"}
+        col_names = {"_id": "_id", "i": "EID"}
+        col_types = {"_id": "object", "i": "string"}
         for col in r_json['header']:
             if col['array']['type'] == "exact":
                 long_id = f'f{col["id"]}i{col["instance"]}a{col["array"]["value"]}'
             else:
                 long_id = f'f{col["id"]}i{col["instance"]}aall'
             col_names[long_id] = col['field']['name']
-            if col['field']['valueType'] == "":
-                col_types[long_id] = "object"
+            if col['field']['valueType'] == "Text":
+                col_types[long_id] = "string"
             elif col['field']['valueType'] == "Integer":
                 col_types[long_id] = "Int64"
             elif col['field']['valueType'] == "Continuous":
                 col_types[long_id] = "float64"
             else:
                 col_types[long_id] = "object"
+
         res_df = pd.json_normalize(r_json['data'])
+
         for k, v in col_types.items():
             try:
                 res_df[k] = res_df[k].astype(v)
@@ -292,8 +294,10 @@ class Cohort(object):
                       f'data type ({v}) specified in the Cohort Browser metadata. '
                       f'Leaving data type as `object`.',
                       file=stderr)
+
         res_df = res_df.rename(columns=col_names)
         res_df.drop('_id', axis=1, inplace=True)
+
         return res_df
 
     def __fetch_table(self, r_body, iter_all=False):
