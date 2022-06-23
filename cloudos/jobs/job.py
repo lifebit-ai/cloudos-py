@@ -106,7 +106,7 @@ class Job(Cloudos):
         r = requests.get("{}/api/v1/{}?teamId={}".format(cloudos_url,
                                                          resource,
                                                          workspace_id),
-                         params=data)
+                         params=data, verify=False)
         if r.status_code >= 400:
             raise BadRequestException(r)
         for element in json.loads(r.content):
@@ -317,7 +317,7 @@ class Job(Cloudos):
                                                spot)
         r = requests.post("{}/api/v1/jobs?teamId={}".format(cloudos_url,
                                                             workspace_id),
-                          data=json.dumps(params), headers=headers)
+                          data=json.dumps(params), headers=headers, verify=False)
         if r.status_code >= 400:
             raise BadRequestException(r)
         j_id = json.loads(r.content)["_id"]

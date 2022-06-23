@@ -1,5 +1,10 @@
 ## lifebit-ai/cloudos-py: changelog
 
+### 0.0.8bi - 2022-06-23
+- Adds `verify=False` parameter to all `requests.get` and `requests.post`
+calls. That effectively disables the SSL certification verification. That
+was a temporary solution to the BI's certification problem.
+
 ### 0.0.8 - 2022-06-16
 - Adds `--nextflow-profile` parameter to accept nextflow profiles. It
 also makes `--job-config` parameter optional, as a run with only

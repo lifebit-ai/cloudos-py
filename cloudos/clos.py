@@ -44,7 +44,7 @@ class Cloudos:
         }
         r = requests.get("{}/api/v1/jobs/{}".format(cloudos_url,
                                                     j_id),
-                         headers=headers)
+                         headers=headers, verify=False)
         if r.status_code >= 400:
             raise BadRequestException(r)
         return r
@@ -65,7 +65,7 @@ class Cloudos:
         data = {"apikey": self.apikey}
         r = requests.get("{}/api/v1/jobs?teamId={}".format(self.cloudos_url,
                                                            workspace_id),
-                         params=data)
+                         params=data, verify=False)
         if r.status_code >= 400:
             raise BadRequestException()
         return r
