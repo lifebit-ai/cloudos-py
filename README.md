@@ -1,5 +1,7 @@
 # cloudos
 
+[![codecov](https://codecov.io/gh/lifebit-ai/cloudos-py/branch/main/graph/badge.svg?token=kTob8bynPx)](https://codecov.io/gh/lifebit-ai/cloudos-py)
+
 __Date:__ 2022-07-14\
 __Version:__ 0.1.2
 
