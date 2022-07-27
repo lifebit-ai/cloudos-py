@@ -86,7 +86,7 @@ def cromwell():
               help='Whether to make use the batch executor instead of the default ignite.',
               is_flag=True)
 @click.option('--instance-type',
-              help='The type of AMI to use. Default=c5.xlarge.',
+              help='Name of the instance type to be used for the job master node. Default=c5.xlarge.',
               default='c5.xlarge')
 @click.option('--instance-disk',
               help='The amount of disk storage to configure. Default=500.',
