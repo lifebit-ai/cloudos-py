@@ -1,5 +1,9 @@
 ## lifebit-ai/cloudos-cli: changelog
 
+### 0.2.0 - 2022-07-28
+- Adds `--parameter / -p` new argument to allow to specify the job
+parameters using the command-line. 
+
 ### 0.1.4 - 2022-07-27
 - Unittests added for method `load` and `create` from class `Cloudos`
 

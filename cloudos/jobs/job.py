@@ -15,10 +15,12 @@ class Job(Cloudos):
 
     Parameters
     ----------
-    apikey : string
-        Your CloudOS API key.
     cloudos_url : string
         The CloudOS service url.
+    apikey : string
+        Your CloudOS API key.
+    cromwell_token : string
+        Cromwell server token.
     workspace_id : string
         The specific Cloudos workspace id.
     project_name : string
@@ -157,6 +159,7 @@ class Job(Cloudos):
 
     def convert_nextflow_to_json(self,
                                  job_config,
+                                 parameter,
                                  git_commit,
                                  git_tag,
                                  project_id,
@@ -179,6 +182,9 @@ class Job(Cloudos):
         ----------
         job_config : string
             Path to a nextflow.config file with parameters scope.
+        parameter : tuple
+            Tuple of strings indicating the parameters to pass to the pipeline call.
+            They are in the following form: ('param1=param1val', 'param2=param2val', ...)
         git_commit : string
             The exact commit of the pipeline to use. Equivalent to -r
             option in Nextflow. If not specified, the last commit of the
@@ -226,12 +232,12 @@ class Job(Cloudos):
         if workflow_type == 'wdl':
             # This is required as non-resumable jobs fails always using WDL workflows.
             resumable = True
-        if nextflow_profile is None and job_config is None:
-            raise ValueError('No --job-config or --nextflow_profile was specified, please use ' +
-                             'at least one of these options.')
-        if workflow_type == 'wdl' and job_config is None:
-            raise ValueError('No --job-config was provided. This parameter is required for WDL ' +
-                             'workflows.')
+        if nextflow_profile is None and job_config is None and len(parameter) == 0:
+            raise ValueError('No --job-config, --nextflow_profile or --parameter were specified,' +
+                             '  please use at least one of these options.')
+        if workflow_type == 'wdl' and job_config is None and len(parameter) == 0:
+            raise ValueError('No --job-config or --parameter were provided. At least one of ' +
+                             'these are required for WDL workflows.')
         if job_config is not None:
             with open(job_config, 'r') as p:
                 reading = False
@@ -258,7 +264,7 @@ class Job(Cloudos):
                                     raise ValueError('Please, specify your ' +
                                                      'parameters in ' +
                                                      f'{job_config} using ' +
-                                                     'the \'=\' char as spacer. ' +
+                                                     'the \'=\' as spacer. ' +
                                                      'E.g: name = my_name')
                                 elif workflow_type == 'wdl':
                                     param = {"prefix": "",
@@ -275,6 +281,28 @@ class Job(Cloudos):
             if len(workflow_params) == 0:
                 raise ValueError(f'The {job_config} file did not contain any ' +
                                  'valid parameter')
+        if len(parameter) > 0:
+            for p in parameter:
+                p_split = p.split('=')
+                if len(p_split) != 2:
+                    raise ValueError('Please, specify -p / --parameter using a single \'=\' ' +
+                                     'as spacer. E.g: input=value')
+                p_name = p_split[0]
+                p_value = p_split[1]
+                if workflow_type == 'wdl':
+                    param = {"prefix": "",
+                             "name": p_name,
+                             "parameterKind": "textValue",
+                             "textValue": p_value}
+                    workflow_params.append(param)
+                else:
+                    param = {"prefix": "--",
+                             "name": p_name,
+                             "parameterKind": "textValue",
+                             "textValue": p_value}
+                    workflow_params.append(param)
+            if len(workflow_params) == 0:
+                raise ValueError(f'The provided parameters are not valid: {parameter}')
         if spot:
             instance_type_block = {
                 "instanceType": instance_type,
@@ -342,6 +370,7 @@ class Job(Cloudos):
 
     def send_job(self,
                  job_config=None,
+                 parameter=(),
                  git_commit=None,
                  git_tag=None,
                  job_name='new_job',
@@ -362,6 +391,9 @@ class Job(Cloudos):
         ----------
         job_config : string
             Path to a nextflow.config file with parameters scope.
+        parameter : tuple
+            Tuple of strings indicating the parameters to pass to the pipeline call.
+            They are in the following form: ('param1=param1val', 'param2=param2val', ...)
         git_commit : string
             The exact commit of the pipeline to use. Equivalent to -r
             option in Nextflow. If not specified, the last commit of the
@@ -412,6 +444,7 @@ class Job(Cloudos):
             "apikey": apikey
         }
         params = self.convert_nextflow_to_json(job_config,
+                                               parameter,
                                                git_commit,
                                                git_tag,
                                                project_id,

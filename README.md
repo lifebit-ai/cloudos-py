@@ -1,7 +1,7 @@
 # cloudos
 
-__Date:__ 2022-07-26\
-__Version:__ 0.1.4
+__Date:__ 2022-07-2\
+__Version:__ 0.2.0
 
 
 Python package for interacting with CloudOS
@@ -25,7 +25,7 @@ and the `environment.yml` files provided.
 To run the existing docker image at `quay.io`:
 
 ```bash
-docker run --rm -it quay.io/lifebitaiorg/cloudos-cli:v0.1.4
+docker run --rm -it quay.io/lifebitaiorg/cloudos-cli:v0.2.0
 ```
 
 ### From Github
@@ -77,7 +77,7 @@ cloudos job run --help
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS job functionality: run and check jobs in CloudOS.
 
@@ -86,56 +86,62 @@ Usage: cloudos job run [OPTIONS]
   Submit a job to CloudOS.
 
 Options:
-  -k, --apikey TEXT            Your CloudOS API key  [required]
-  -c, --cloudos-url TEXT       The CloudOS url you are trying to access to.
-                               Default=https://cloudos.lifebit.ai.
-  --workspace-id TEXT          The specific CloudOS workspace id.  [required]
-  --project-name TEXT          The name of a CloudOS project.  [required]
-  --workflow-name TEXT         The name of a CloudOS workflow or pipeline.
-                               [required]
-  --job-config TEXT            A config file similar to a nextflow.config
-                               file, but only with the parameters to use with
-                               your job.
-  -p, --nextflow-profile TEXT  A comma separated string indicating the
-                               nextflow profile/s to use with your job.
-  --git-commit TEXT            The exact whole 40 character commit hash to run
-                               for the selected pipeline. If not specified it
-                               defaults to the last commit of the default
-                               branch.
-  --git-tag TEXT               The tag to run for the selected pipeline. If
-                               not specified it defaults to the last commit of
-                               the default branch.
-  --job-name TEXT              The name of the job. Default=new_job.
-  --resumable                  Whether to make the job able to be resumed or
-                               not.
-  --batch                      Whether to make use the batch executor instead
-                               of the default ignite.
-  --instance-type TEXT         The type of AMI to use. Default=c5.xlarge.
-  --instance-disk INTEGER      The amount of disk storage to configure.
-                               Default=500.
-  --spot                       Whether to make a spot instance.
-  --storage-mode TEXT          Either 'lustre' or 'regular'. Indicates if the
-                               user wants to select regular or lustre storage.
-                               Default=regular.
-  --lustre-size INTEGER        The lustre storage to be used when --storage-
-                               mode=lustre, in GB. It should be 1200 or a
-                               multiple of it. Default=1200.
-  --wait-completion            Whether to wait to job completion and report
-                               final job status.
-  --wait-time INTEGER          Max time to wait (in seconds) to job
-                               completion. Default=3600.
-  --wdl-mainfile TEXT          For WDL workflows, which mainFile (.wdl) is
-                               configured to use.
-  --wdl-importsfile TEXT       For WDL workflows, which importsFile (.zip) is
-                               configured to use.
-  -t, --cromwell-token TEXT    Specific Cromwell server authentication token.
-                               Only required for WDL jobs.
-  --repository-platform TEXT   Name of the repository platform of the
-                               workflow. Default=github.
-  --cost-limit FLOAT           Add a cost limit to your job. Default=-1 (no
-                               cost limit).
-  --verbose                    Whether to print information messages or not.
-  --help                       Show this message and exit.
+  -k, --apikey TEXT           Your CloudOS API key  [required]
+  -c, --cloudos-url TEXT      The CloudOS url you are trying to access to.
+                              Default=https://cloudos.lifebit.ai.
+  --workspace-id TEXT         The specific CloudOS workspace id.  [required]
+  --project-name TEXT         The name of a CloudOS project.  [required]
+  --workflow-name TEXT        The name of a CloudOS workflow or pipeline.
+                              [required]
+  --job-config TEXT           A config file similar to a nextflow.config file,
+                              but only with the parameters to use with your
+                              job.
+  -p, --parameter TEXT        A single parameter to pass to the job call. It
+                              should be in the following form:
+                              parameter_name=parameter_value. E.g.: -p
+                              input=s3://path_to_my_file. You can use this
+                              option as many times as parameters you want to
+                              include.
+  --nextflow-profile TEXT     A comma separated string indicating the nextflow
+                              profile/s to use with your job.
+  --git-commit TEXT           The exact whole 40 character commit hash to run
+                              for the selected pipeline. If not specified it
+                              defaults to the last commit of the default
+                              branch.
+  --git-tag TEXT              The tag to run for the selected pipeline. If not
+                              specified it defaults to the last commit of the
+                              default branch.
+  --job-name TEXT             The name of the job. Default=new_job.
+  --resumable                 Whether to make the job able to be resumed or
+                              not.
+  --batch                     Whether to make use the batch executor instead
+                              of the default ignite.
+  --instance-type TEXT        The type of AMI to use. Default=c5.xlarge.
+  --instance-disk INTEGER     The amount of disk storage to configure.
+                              Default=500.
+  --spot                      Whether to make a spot instance.
+  --storage-mode TEXT         Either 'lustre' or 'regular'. Indicates if the
+                              user wants to select regular or lustre storage.
+                              Default=regular.
+  --lustre-size INTEGER       The lustre storage to be used when --storage-
+                              mode=lustre, in GB. It should be 1200 or a
+                              multiple of it. Default=1200.
+  --wait-completion           Whether to wait to job completion and report
+                              final job status.
+  --wait-time INTEGER         Max time to wait (in seconds) to job completion.
+                              Default=3600.
+  --wdl-mainfile TEXT         For WDL workflows, which mainFile (.wdl) is
+                              configured to use.
+  --wdl-importsfile TEXT      For WDL workflows, which importsFile (.zip) is
+                              configured to use.
+  -t, --cromwell-token TEXT   Specific Cromwell server authentication token.
+                              Only required for WDL jobs.
+  --repository-platform TEXT  Name of the repository platform of the workflow.
+                              Default=github.
+  --cost-limit FLOAT          Add a cost limit to your job. Default=-1 (no
+                              cost limit).
+  --verbose                   Whether to print information messages or not.
+  --help                      Show this message and exit.
 ```
 
 #### Send a job to CloudOS
@@ -152,7 +158,7 @@ WORKFLOW_NAME="rnatoy"
 JOB_PARAMS="cloudos/examples/rnatoy.config"
 ```
 
-As you can see, a file with the job parameters is required to configure the
+As you can see, a file with the job parameters is used to configure the
 job. This file could be a regular `nextflow.config` file or any file with the
 following structure:
 
@@ -178,12 +184,32 @@ cloudos job run \
     --spot
 ```
 
+In addition, parameters can also be specified using the command-line `-p` or `--parameter`. For instance,
+the previous command is equivalent to:
+
+```bash
+cloudos job run \
+    --cloudos-url $CLOUDOS \
+    --apikey $MY_API_KEY \
+    --workspace-id $WORKSPACE_ID \
+    --project-name "$PROJECT_NAME" \
+    --workflow-name $WORKFLOW_NAME \
+    --parameter reads=s3://lifebit-featured-datasets/pipelines/rnatoy-data \
+    --parameter genome=s3://lifebit-featured-datasets/pipelines/rnatoy-data/ggal_1_48850000_49020000.Ggal71.500bpflank.fa \
+    --parameter annot=s3://lifebit-featured-datasets/pipelines/rnatoy-data/ggal_1_48850000_49020000.bed.gff \
+    --resumable \
+    --spot
+```
+
+> NOTE: options `--job-config` and `--parameter` are completely compatible and complementary, so you can use a
+`--job-config` and adding additional parameters using `--parameter` in the same call.
+
 If everything went well, you should see something like:
 
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS job functionality: run and check jobs in CloudOS.
 
@@ -224,7 +250,7 @@ previous command should have an output similar to:
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS job functionality: run and check jobs in CloudOS.
 
@@ -253,7 +279,7 @@ The expected output should be something similar to:
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS job functionality: run and check jobs in CloudOS.
 
@@ -288,7 +314,7 @@ The expected output is something similar to:
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS job functionality: run and check jobs in CloudOS.
 
@@ -311,7 +337,7 @@ cloudos job list \
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS job functionality: run and check jobs in CloudOS.
 
@@ -344,7 +370,7 @@ The expected output is something similar to:
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS workflow functionality: list workflows in CloudOS.
 
@@ -366,7 +392,7 @@ cloudos workflow list \
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS workflow functionality: list workflows in CloudOS.
 
@@ -396,7 +422,7 @@ cloudos cromwell status \
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 Cromwell server functionality: check status, start and stop.
 
@@ -415,7 +441,7 @@ cloudos cromwell start \
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 Cromwell server functionality: check status, start and stop.
 
@@ -436,7 +462,7 @@ cloudos cromwell stop \
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 Cromwell server functionality: check status, start and stop.
 
@@ -446,17 +472,17 @@ Stopping Cromwell server...
 
 #### Running WDL workflows
 
-To run WDL workflows, `cloudos job run` command can be used normally, but adding two extra
+To run WDL workflows, `cloudos job run` command can be used normally, but adding three extra
 parameters:
 
 - `--wdl-mainfile`: name of the mainFile (*.wdl) file used by the CloudOS workflow.
 - `--wdl-importsfile`: name of the worfklow imported file (importsFile, *.zip).
-- `--cromwell-token`: specific token for Cromwell server, different from the presonal API token.
+- `--cromwell-token`: specific token for Cromwell server, different from the personal API token.
 
 All the rest of the `cloudos job run` functionality is available.
 
 > NOTE: WDL does not support `profiles` and therefore, `--nextflow-profile` option is not
-available. Instead, only `--job-config` could be used. The format of the job config file is
+available. Instead, use `--job-config` and/or `--parameter`. The format of the job config file is
 expected to be the same as for nextflow pipelines.
 
 Example of job config file for WDL workflows:
@@ -472,6 +498,9 @@ params {
   test.mapTest = {"some":"props"}
 }
 ```
+
+> NOTE: when using `--parameter` option, if the value needs quotes (`"`) you will need to scape them.
+E.g.: `--parameter test.arrayTest=[\"lala\"]`
 
 ```bash
 # Configure variables
@@ -502,7 +531,7 @@ cloudos job run \
 ```console
 CloudOS python package: a package for interacting with CloudOS.
 
-Version: 0.1.4
+Version: 0.2.0
 
 CloudOS job functionality: run and check jobs in CloudOS.
 

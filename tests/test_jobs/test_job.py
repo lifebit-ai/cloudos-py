@@ -7,6 +7,7 @@ actual_json_file = "tests/test_data/convert_nextflow_to_json_params.json"
 
 param_dict = {
     "config": "cloudos/examples/rnatoy.config",
+    "parameter": (),
     "git_commit": None,
     "git_tag": None,
     "project_id": "6054754029b82f0112762b9c",
@@ -29,6 +30,7 @@ param_dict = {
 def test_convert_nextflow_to_json_output_correct():
     job_json = Job.convert_nextflow_to_json(
         1, param_dict["config"],
+        parameter=param_dict["parameter"],
         git_commit=param_dict["git_commit"],
         git_tag=param_dict["git_tag"],
         project_id=param_dict["project_id"],
@@ -56,6 +58,7 @@ def test_convert_nextflow_to_json_badly_formed_config():
     with pytest.raises(ValueError) as excinfo:
         job_json = Job.convert_nextflow_to_json(
             1, no_equals_config,
+            parameter=param_dict["parameter"],
             git_commit=param_dict["git_commit"],
             git_tag=param_dict["git_tag"],
             project_id=param_dict["project_id"],
@@ -76,5 +79,5 @@ def test_convert_nextflow_to_json_badly_formed_config():
         print(str(excinfo.value))
     assert "Please, specify your parameters in\
             tests/test_data/wrong_params.config\
-            using the \'=\' char as spacer.\
+            using the \'=\' as spacer.\
             E.g: name = my_name".replace("           ", "") in str(excinfo.value)
